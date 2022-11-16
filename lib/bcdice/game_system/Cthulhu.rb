@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'bcdice/arithmetic_evaluator'
-
 module BCDice
   module GameSystem
     class Cthulhu < Base
@@ -50,62 +48,24 @@ module BCDice
 
       register_prefix('CCB?', 'RESB?', 'CBRB?')
 
-      def initialize(command)
-        super(command)
-        @special_percentage  = 20
-        @critical_percentage = 1
-        @fumble_percentage   = 1
-      end
-
       def eval_game_system_specific_command(command)
-        case command
-        when /CCB/i
-          # 5%
-          @critical_percentage = 5
-          @fumble_percentage   = 5
-          return getCheckResult(command)
-        when /CC/i
-          # 1%
-          @critical_percentage = 1
-          @fumble_percentage   = 1
-          return getCheckResult(command)
-        when /RESB/i
-          # 5%
-          @critical_percentage = 5
-          @fumble_percentage   = 5
-          return getRegistResult(command)
-        when /CBRB/i
-          # 5%
-          @critical_percentage = 5
-          @fumble_percentage   = 5
-          return getCombineRoll(command)
-        when /RES/i
-          # 1%
-          @critical_percentage = 1
-          @fumble_percentage   = 1
-          return getRegistResult(command)
-        when /CBR/i
-          # 1%
-          @critical_percentage = 1
-          @fumble_percentage   = 1
-          return getCombineRoll(command)
-        end
-
-        return nil
+        roll_skill_check(command) || roll_regist_check(command) || roll_combine_check(command)
       end
 
       private
 
-      def getCheckResult(command)
-        m = %r{^CCB?(\d+)?(?:<=([+-/*\d]+))?$}i.match(command)
-        unless m
+      def roll_skill_check(command)
+        parser = Command::Parser.new(/CCB?/, round_type: @round_type).enable_suffix_number.restrict_cmp_op_to(nil, :<=)
+        parsed = parser.parse(command)
+        unless parsed
           return nil
         end
 
-        broken_num = m[1].to_i
-        diff = ArithmeticEvaluator.eval(m[2])
+        critical_fumble = parsed.command == "CC" ? 1 : 5
+        broken_num = parsed.suffix_number || 0
+        diff = parsed.target_number
 
-        if diff <= 0
+        if parsed.cmp_op.nil?
           total = @randomizer.roll_once(100)
           return Result.new("(1D100) ＞ #{total}")
         end
@@ -116,7 +76,7 @@ module BCDice
         end
 
         total = @randomizer.roll_once(100)
-        compare_result = compare(total, diff, broken_num)
+        compare_result = compare(total, diff, critical_fumble, broken_num)
 
         compare_result.to_result.tap do |r|
           r.text = "#{expr} ＞ #{total} ＞ #{compare_result.text}"
@@ -168,17 +128,17 @@ module BCDice
         end
       end
 
-      def compare(total, target, broken_number = 0)
+      def compare(total, target, critical_fumble, broken_number = 0)
         result = CompareResult.new(@locale)
-        target_special = (target * @special_percentage / 100).clamp(1, 100)
+        target_special = target / 5
 
         if (total <= target) && (total < 100)
           result.success = true
           result.special = total <= target_special
-          result.critical = total <= @critical_percentage
+          result.critical = total <= critical_fumble
         else
           result.failure = true
-          result.fumble = total >= (101 - @fumble_percentage)
+          result.fumble = total >= (101 - critical_fumble)
         end
 
         if broken_number > 0 && total >= broken_number
@@ -192,13 +152,14 @@ module BCDice
         return result
       end
 
-      def getRegistResult(command)
-        m = /^RESB?(-?\d+)$/i.match(command)
+      def roll_regist_check(command)
+        m = /^(RESB?)(-?\d+)$/i.match(command)
         unless m
           return nil
         end
 
-        value = m[1].to_i
+        critical_fumble = m[1] == "RES" ? 1 : 5
+        value = m[2].to_i
         target = value * 5 + 50
 
         if target < 5
@@ -211,26 +172,27 @@ module BCDice
 
         # 通常判定
         total_n = @randomizer.roll_once(100)
-        compare_result = compare(total_n, target)
+        compare_result = compare(total_n, target, critical_fumble)
 
         compare_result.to_result.tap do |r|
           r.text = "(1d100<=#{target}) ＞ #{total_n} ＞ #{compare_result.text}"
         end
       end
 
-      def getCombineRoll(command)
-        m = /^CBR(B)?\((\d+),(\d+)\)$/i.match(command)
+      def roll_combine_check(command)
+        m = /^(CBRB?)\((\d+),(\d+)\)$/i.match(command)
         unless m
           return nil
         end
 
+        critical_fumble = m[1] == "CBR" ? 1 : 5
         diff_1 = m[2].to_i
         diff_2 = m[3].to_i
 
         total = @randomizer.roll_once(100)
 
-        result_1 = compare(total, diff_1)
-        result_2 = compare(total, diff_2)
+        result_1 = compare(total, diff_1, critical_fumble)
+        result_2 = compare(total, diff_2, critical_fumble)
 
         rank =
           if result_1.success && result_2.success
