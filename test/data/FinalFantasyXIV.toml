@@ -202,3 +202,32 @@ rands = [
   { sides = 20, value = 6 },
   { sides = 20, value = 6 },
 ]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "2DK+2 暗黒攻撃ロール"
+output = "(2DK+2) ＞ [1,5] ＞ [0,10] ＞ 10[0,10]+2 ＞ 12"
+rands = [
+  { sides = 6, value = 1 },
+  { sides = 6, value = 5 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "2DK+2 暗黒攻撃ロール"
+output = "(2DK+2) ＞ [4,4] ＞ [10,10] ＞ 20[10,10]+2 ＞ 22"
+rands = [
+  { sides = 6, value = 4 },
+  { sides = 6, value = 4 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "DK+2 暗黒攻撃ロール"
+output = "(DK+2) ＞ [3] ＞ [0] ＞ 0[0]+2 ＞ 2"
+rands = [
+  { sides = 6, value = 3 },
+]

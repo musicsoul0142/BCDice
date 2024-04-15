@@ -23,12 +23,16 @@ module BCDice
         ・行為判定 nCD+m>=x
           アビリティ判定と同様。
           失敗、成功、クリティカルを自動判定。
+        ・暗黒攻撃ロール nDK+m
+          暗黒バフを適用したd6のダメージ算出を行う。1～3は0、4～6は10としてダメージを計算する。
+          n: ダイス数（省略時1）
+          m: 修正値（省略可）
       TEXT
 
-      register_prefix('\d*AB', '\d*CD')
+      register_prefix('\d*AB', '\d*CD', '\d*DK')
 
       def eval_game_system_specific_command(command)
-        return abirity_roll(command) || action_roll(command)
+        return abirity_roll(command) || action_roll(command) || darkness_attack(command)
       end
 
       def abirity_roll(command)
@@ -104,6 +108,43 @@ module BCDice
           total,
           result.text
         ].compact
+
+        result.text = sequence.join(" ＞ ")
+        result
+      end
+
+      def darkness_attack(command)
+        parser = Command::Parser.new(/\d*DK/, round_type: round_type)
+        cmd = parser.parse(command)
+        return nil unless cmd
+
+        times = cmd.command.start_with?(/\d/) ? cmd.command.to_i : 1
+
+        dice_list_full = @randomizer.roll_barabara(times, 6).sort
+        dice_list_full_str = "[#{dice_list_full.join(',')}]"
+
+        dark_list = []
+        dice_list_full.each do |dice|
+          if dice <= 3
+            dark_list.push(0)
+          else
+            dark_list.push(10)
+          end
+        end
+
+        dark_list_str = "[#{dark_list.join(',')}]"
+        dark_total = dark_list.sum
+        total = dark_total + cmd.modify_number
+
+        sequence = [
+          "(#{cmd.to_s(:after_modify_number)})",
+          dice_list_full_str,
+          dark_list_str,
+          "#{dark_total}[#{dark_list.join(',')}]#{Format.modifier(cmd.modify_number)}",
+          total
+        ].compact
+
+        result = Result.new
 
         result.text = sequence.join(" ＞ ")
         result
