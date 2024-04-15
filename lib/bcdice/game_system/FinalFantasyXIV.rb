@@ -34,18 +34,16 @@ module BCDice
       def abirity_roll(command)
         parser = Command::Parser.new(/\d*AB/, round_type: round_type)
                                 .restrict_cmp_op_to(:>=, nil)
-                                .enable_critical
         cmd = parser.parse(command)
         return nil unless cmd
 
         times = cmd.command.start_with?(/\d/) ? cmd.command.to_i : 1
 
-        cmd.critical = 20
-
         dice_list_full = @randomizer.roll_barabara(times, 20).sort
         dice_list_full_str = "[#{dice_list_full.join(',')}]" if times > 2
 
-        dice_result = dice_list_full[-1, 1]
+        dice_list = dice_list_full[-1, 1]
+        dice_result = dice_list[0]
 
         total = dice_result + cmd.modify_number
 
@@ -68,7 +66,7 @@ module BCDice
           result.text
         ].compact
 
-        result.text = sequence.join("＞")
+        result.text = sequence.join(" ＞ ")
         result
       end
     end
