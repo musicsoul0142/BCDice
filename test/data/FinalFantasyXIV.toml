@@ -55,3 +55,47 @@ output = "(AB+3) ＞ 12[12]+3 ＞ 15"
 rands = [
   { sides = 20, value = 12 },
 ]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "2AB+5 アビリティ判定 2d20 目標なし"
+output = "(2AB+5) ＞ [8,15] ＞ 15[15]+5 ＞ 20"
+rands = [
+  { sides = 20, value = 15 },
+  { sides = 20, value = 8 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "2AB+5 アビリティ判定 2d20 目標なし クリティカル"
+output = "(2AB+5) ＞ [6,20] ＞ 20[20]+5 ＞ 25 ＞ クリティカル"
+success = true
+critical = true
+rands = [
+  { sides = 20, value = 6 },
+  { sides = 20, value = 20 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "2AB+5>=15 アビリティ判定 2d20 ダイレクトヒット"
+output = "(2AB+5>=15) ＞ [6,14] ＞ 14[14]+5 ＞ 19 ＞ ダイレクトヒット"
+success = true
+rands = [
+  { sides = 20, value = 14 },
+  { sides = 20, value = 6 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "2AB+5>=15 アビリティ判定 2d20 基本効果のみ"
+output = "(2AB+5>=15) ＞ [6,6] ＞ 6[6]+5 ＞ 11 ＞ 基本効果のみ"
+failure = true
+rands = [
+  { sides = 20, value = 6 },
+  { sides = 20, value = 6 },
+]

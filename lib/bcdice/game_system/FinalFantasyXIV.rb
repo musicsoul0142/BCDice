@@ -40,7 +40,7 @@ module BCDice
         times = cmd.command.start_with?(/\d/) ? cmd.command.to_i : 1
 
         dice_list_full = @randomizer.roll_barabara(times, 20).sort
-        dice_list_full_str = "[#{dice_list_full.join(',')}]" if times > 2
+        dice_list_full_str = "[#{dice_list_full.join(',')}]" if times > 1
 
         dice_list = dice_list_full[-1, 1]
         dice_result = dice_list[0]
