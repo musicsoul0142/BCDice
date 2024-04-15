@@ -1,7 +1,0 @@
-[[ test ]]
-game_system = "FinalFanasyXIV"
-input = "AB アビリティ判定 修正・目標なし"
-output = "(AB) ＞ 10"
-rands = [
-  { sides = 20, value = 10 },
-]
