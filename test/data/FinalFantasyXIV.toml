@@ -99,3 +99,106 @@ rands = [
   { sides = 20, value = 6 },
   { sides = 20, value = 6 },
 ]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "CD 行為判定 修正・目標なし"
+output = "(CD) ＞ 10[10] ＞ 10"
+rands = [
+  { sides = 20, value = 10 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "CD+5 行為判定 目標なし"
+output = "(CD+5) ＞ 12[12]+5 ＞ 17"
+rands = [
+  { sides = 20, value = 12 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "CD+5 行為判定 クリティカル"
+output = "(CD+5) ＞ 20[20]+5 ＞ 25 ＞ クリティカル"
+success = true
+critical = true
+rands = [
+  { sides = 20, value = 20 },
+]
+
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "CD+5>=11 行為判定 成功"
+output = "(CD+5>=11) ＞ 8[8]+5 ＞ 13 ＞ 成功"
+success = true
+rands = [
+  { sides = 20, value = 8 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "CD+5>=11 行為判定 失敗"
+output = "(CD+5>=11) ＞ 5[5]+5 ＞ 10 ＞ 失敗"
+failure = true
+rands = [
+  { sides = 20, value = 5 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "CD+8-5 行為判定 多重修正値目標なし"
+output = "(CD+3) ＞ 12[12]+3 ＞ 15"
+rands = [
+  { sides = 20, value = 12 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "2CD+5 行為判定 2d20 目標なし"
+output = "(2CD+5) ＞ [8,15] ＞ 15[15]+5 ＞ 20"
+rands = [
+  { sides = 20, value = 15 },
+  { sides = 20, value = 8 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "2CD+5 行為判定 2d20 目標なし クリティカル"
+output = "(2CD+5) ＞ [6,20] ＞ 20[20]+5 ＞ 25 ＞ クリティカル"
+success = true
+critical = true
+rands = [
+  { sides = 20, value = 6 },
+  { sides = 20, value = 20 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "2CD+5>=15 行為判定 2d20 成功"
+output = "(2CD+5>=15) ＞ [6,14] ＞ 14[14]+5 ＞ 19 ＞ 成功"
+success = true
+rands = [
+  { sides = 20, value = 14 },
+  { sides = 20, value = 6 },
+]
+
+
+[[ test ]]
+game_system = "FinalFantasyXIV"
+input = "2CD+5>=15 行為判定 2d20 失敗"
+output = "(2CD+5>=15) ＞ [6,6] ＞ 6[6]+5 ＞ 11 ＞ 失敗"
+failure = true
+rands = [
+  { sides = 20, value = 6 },
+  { sides = 20, value = 6 },
+]

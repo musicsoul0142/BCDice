@@ -69,6 +69,47 @@ module BCDice
         result.text = sequence.join(" ＞ ")
         result
       end
+
+      def action_roll(command)
+        parser = Command::Parser.new(/\d*CD/, round_type: round_type)
+                                .restrict_cmp_op_to(:>=, nil)
+        cmd = parser.parse(command)
+        return nil unless cmd
+
+        times = cmd.command.start_with?(/\d/) ? cmd.command.to_i : 1
+
+        dice_list_full = @randomizer.roll_barabara(times, 20).sort
+        dice_list_full_str = "[#{dice_list_full.join(',')}]" if times > 1
+
+        dice_list = dice_list_full[-1, 1]
+        dice_result = dice_list[0]
+
+        total = dice_result + cmd.modify_number
+
+        result =
+          if dice_result == 20
+            Result.critical("クリティカル")
+          elsif cmd.cmp_op.nil?
+            Result.new
+          elsif total >= cmd.target_number
+            Result.success("成功")
+          else
+            Result.failure("失敗")
+          end
+
+        sequence = [
+          "(#{cmd.to_s(:after_modify_number)})",
+          dice_list_full_str,
+          "#{dice_result}[#{dice_list.join(',')}]#{Format.modifier(cmd.modify_number)}",
+          total,
+          result.text
+        ].compact
+
+        result.text = sequence.join(" ＞ ")
+        result
+      end
+
+
     end
   end
 end
