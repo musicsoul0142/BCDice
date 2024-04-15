@@ -108,8 +108,6 @@ module BCDice
         result.text = sequence.join(" ＞ ")
         result
       end
-
-
     end
   end
 end
