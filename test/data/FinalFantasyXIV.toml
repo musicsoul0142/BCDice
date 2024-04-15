@@ -1,7 +1,7 @@
 [[ test ]]
 game_system = "FinalFantasyXIV"
 input = "AB アビリティ判定 修正・目標なし"
-output = "(AB) ＞ 10"
+output = "(AB) ＞ 10[10] ＞ 10"
 rands = [
   { sides = 20, value = 10 },
 ]
@@ -10,7 +10,7 @@ rands = [
 [[ test ]]
 game_system = "FinalFantasyXIV"
 input = "AB+5 アビリティ判定 目標なし"
-output = "(AB+5) ＞ 12+5 ＞ 17"
+output = "(AB+5) ＞ 12[12]+5 ＞ 17"
 rands = [
   { sides = 20, value = 12 },
 ]
@@ -19,11 +19,11 @@ rands = [
 [[ test ]]
 game_system = "FinalFantasyXIV"
 input = "AB+5 アビリティ判定 クリティカル"
-output = "(AB+5) ＞ 20+5 ＞ 25 ＞ クリティカル"
+output = "(AB+5) ＞ 20[20]+5 ＞ 25 ＞ クリティカル"
 success = true
 critical = true
 rands = [
-  { sides = 20, value = 12 },
+  { sides = 20, value = 20 },
 ]
 
 
@@ -31,7 +31,7 @@ rands = [
 [[ test ]]
 game_system = "FinalFantasyXIV"
 input = "AB+5>=11 アビリティ判定 ダイレクトヒット"
-output = "(AB+5>=11) ＞ 8+5 ＞ 13 ＞ ダイレクトヒット"
+output = "(AB+5>=11) ＞ 8[8]+5 ＞ 13 ＞ ダイレクトヒット"
 success = true
 rands = [
   { sides = 20, value = 8 },
@@ -41,7 +41,7 @@ rands = [
 [[ test ]]
 game_system = "FinalFantasyXIV"
 input = "AB+5>=11 アビリティ判定 基本効果のみ"
-output = "(AB+5>=11) ＞ 5+5 ＞ 10 ＞ 基本効果のみ"
+output = "(AB+5>=11) ＞ 5[5]+5 ＞ 10 ＞ 基本効果のみ"
 failure = true
 rands = [
   { sides = 20, value = 5 },
@@ -51,7 +51,7 @@ rands = [
 [[ test ]]
 game_system = "FinalFantasyXIV"
 input = "AB+8-5 アビリティ判定 多重修正値目標なし"
-output = "(AB+5) ＞ 12+3 ＞ 15"
+output = "(AB+3) ＞ 12[12]+3 ＞ 15"
 rands = [
   { sides = 20, value = 12 },
 ]
