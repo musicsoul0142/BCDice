@@ -31,6 +31,8 @@ module BCDice
         return abirity_roll(command) || action_roll(command)
       end
 
+      private
+
       def abirity_roll(command)
         parser = Command::Parser.new(/\d*AB/, round_type: round_type)
                                 .restrict_cmp_op_to(:>=, nil)
