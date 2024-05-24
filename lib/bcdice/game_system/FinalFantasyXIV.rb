@@ -22,21 +22,14 @@ module BCDice
           例）AB, AB+5, AB+5>=14, 2AB+5>=14
         ・行為判定 nDC+m>=x
           アビリティ判定と同様。
-<<<<<<< HEAD
-          失敗、成功、クリティカルを自動判定。
+          失敗、成功を自動判定。
         ・暗黒攻撃ロール nDK+m
           暗黒バフを適用したd6のダメージ算出を行う。1～3は0、4～6は10としてダメージを計算する。
           n: ダイス数（省略時1）
           m: 修正値（省略可）
       TEXT
 
-      register_prefix('\d*AB', '\d*CD', '\d*DK')
-=======
-          失敗、成功を自動判定。
-      TEXT
-
-      register_prefix('\d*AB', '\d*DC')
->>>>>>> ff14dev
+      register_prefix('\d*AB', '\d*DC', '\d*DK')
 
       def eval_game_system_specific_command(command)
         return abirity_roll(command) || action_roll(command) || darkness_attack(command)

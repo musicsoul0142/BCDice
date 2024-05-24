@@ -189,7 +189,6 @@ rands = [
   { sides = 20, value = 6 },
 ]
 
-<<<<<<< HEAD
 
 [[ test ]]
 game_system = "FinalFantasyXIV"
@@ -217,7 +216,9 @@ input = "DK+2 暗黒攻撃ロール"
 output = "(DK+2) ＞ [3] ＞ [0] ＞ 0[0]+2 ＞ 2"
 rands = [
   { sides = 6, value = 3 },
-=======
+]
+
+
 [[ test ]]
 game_system = "FinalFantasyXIV"
 input = "DC+5>=26 行為判定 20失敗"
@@ -225,5 +226,4 @@ output = "(DC+5>=26) ＞ 20[20]+5 ＞ 25 ＞ 失敗"
 failure = true
 rands = [
   { sides = 20, value = 20},
->>>>>>> ff14dev
 ]
