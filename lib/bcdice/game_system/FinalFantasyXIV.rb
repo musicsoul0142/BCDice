@@ -2,7 +2,7 @@
 
 module BCDice
   module GameSystem
-    class TemplABe < Base
+    class FinalFantasyXIV < Base
       # ゲームシステムの識別子
       ID = "FinalFantasyXIV"
 
@@ -20,8 +20,9 @@ module BCDice
           x: 目標値（省略可）
           基本効果のみ、ダイレクトヒット、クリティカルを自動判定。
           例）AB, AB+5, AB+5>=14, 2AB+5>=14
-        ・行為判定 nCD+m>=x
+        ・行為判定 nDC+m>=x
           アビリティ判定と同様。
+<<<<<<< HEAD
           失敗、成功、クリティカルを自動判定。
         ・暗黒攻撃ロール nDK+m
           暗黒バフを適用したd6のダメージ算出を行う。1～3は0、4～6は10としてダメージを計算する。
@@ -30,10 +31,18 @@ module BCDice
       TEXT
 
       register_prefix('\d*AB', '\d*CD', '\d*DK')
+=======
+          失敗、成功を自動判定。
+      TEXT
+
+      register_prefix('\d*AB', '\d*DC')
+>>>>>>> ff14dev
 
       def eval_game_system_specific_command(command)
         return abirity_roll(command) || action_roll(command) || darkness_attack(command)
       end
+
+      private
 
       def abirity_roll(command)
         parser = Command::Parser.new(/\d*AB/, round_type: round_type)
@@ -75,7 +84,7 @@ module BCDice
       end
 
       def action_roll(command)
-        parser = Command::Parser.new(/\d*CD/, round_type: round_type)
+        parser = Command::Parser.new(/\d*DC/, round_type: round_type)
                                 .restrict_cmp_op_to(:>=, nil)
         cmd = parser.parse(command)
         return nil unless cmd
@@ -91,9 +100,7 @@ module BCDice
         total = dice_result + cmd.modify_number
 
         result =
-          if dice_result == 20
-            Result.critical("クリティカル")
-          elsif cmd.cmp_op.nil?
+          if cmd.cmp_op.nil?
             Result.new
           elsif total >= cmd.target_number
             Result.success("成功")
